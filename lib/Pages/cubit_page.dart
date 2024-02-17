@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_block_tutorial/Blocs/internet_bloc/internet_bloc.dart';
-import 'package:flutter_block_tutorial/Blocs/internet_bloc/internet_state.dart';
+import 'package:flutter_block_tutorial/Cubit/internet_cubit.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class CubitPage extends StatelessWidget {
+  const CubitPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(child: Center(
         // bloc consumer is combination of listener and builder
-        child: BlocConsumer<InternetBloc, InternetState>(
+        child: BlocConsumer<InternetCubit, InternetState>(
           // listener checks the state in background doesn't build any ui
           listener: (context, state) {
-            if(state is InternetGainedState){
+            if(state == InternetState.Gained){
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Center(child: Text("Internet Connected!")),
-                backgroundColor: Colors.green
-                )
+                  const SnackBar(content: Center(child: Text("Internet Connected!")),
+                      backgroundColor: Colors.green
+                  )
               );
-            }else if(state is InternetLostState){
+            }else if(state == InternetState.Lost){
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Center(child: Text("Internet Lost!")),
                       backgroundColor: Colors.red
@@ -30,9 +29,9 @@ class HomePage extends StatelessWidget {
           },
           // builder is used to build ui that is to be displayed on the screen
           builder: (context, state) {
-            if(state is InternetGainedState){
+            if(state == InternetState.Gained){
               return const Text("Connected");
-            }else if(state is InternetLostState){
+            }else if(state == InternetState.Lost){
               return const Text("Not Connected");
             }else{
               return const Text("Loading....");
